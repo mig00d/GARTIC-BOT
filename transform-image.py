@@ -1,29 +1,28 @@
 from PIL import Image
 from math import sqrt
-from pynput.mouse import Button, Controller
 
 # COULEUR GARTIC PHONE
-BLACK = (0, 0, 0)
-DARK_BLUE = (0, 80, 205)
-WHITE = (255, 255, 255)
-LIGHT_GREY = (170, 170, 170)
-LIGHT_BLUE = (38, 201, 205)
-DARK_RED = (153, 0, 0)
-BROWN = (165, 65, 18)
-LIGHT_GREEN = (17, 176, 60)
-LIGHT_RED = (255, 0, 19)
-ORANGE = (255, 120, 41)
-DARK_ORANGE = (176, 112, 28)
-PURPLE = (153, 0, 78)
-DARK_BEIGE = (203, 90, 87)
-YELLOW = (253, 193, 38)
-PINK = (255, 0, 143)
-DARK_GREEN = (11, 116, 32)
-BEIGE = (254, 175, 168)
+RGB_BLACK = (0, 0, 0)
+RGB_DARK_BLUE = (0, 80, 205)
+RGB_WHITE = (255, 255, 255)
+RGB_LIGHT_GREY = (170, 170, 170)
+RGB_LIGHT_BLUE = (38, 201, 205)
+RGB_DARK_RED = (153, 0, 0)
+RGB_BROWN = (165, 65, 18)
+RGB_LIGHT_GREEN = (17, 176, 60)
+RGB_LIGHT_RED = (255, 0, 19)
+RGB_ORANGE = (255, 120, 41)
+RGB_DARK_ORANGE = (176, 112, 28)
+RGB_PURPLE = (153, 0, 78)
+RGB_DARK_BEIGE = (203, 90, 87)
+RGB_YELLOW = (253, 193, 38)
+RGB_PINK = (255, 0, 143)
+RGB_DARK_GREEN = (11, 116, 32)
+RGB_BEIGE = (254, 175, 168)
 
 # toutes les couleurs de base dans gartic phone sont dans cette liste
-ALL_COLOR_RGB = [BLACK, DARK_BLUE, WHITE, LIGHT_GREY, LIGHT_BLUE, DARK_RED, BROWN,
-                 LIGHT_RED, ORANGE, DARK_ORANGE, PURPLE, DARK_BEIGE, YELLOW, PINK, BEIGE]
+ALL_COLOR_RGB = [RGB_BLACK, RGB_DARK_BLUE, RGB_WHITE, RGB_LIGHT_GREY, RGB_LIGHT_BLUE, RGB_DARK_RED, RGB_BROWN,
+                 RGB_LIGHT_RED,RGB_ORANGE, RGB_DARK_ORANGE, RGB_PURPLE,RGB_DARK_BEIGE, RGB_YELLOW, RGB_PINK, RGB_BEIGE]
 
 
 def calcul_better_color(pixels_image) -> list:
@@ -70,11 +69,6 @@ def get_image(image_file: str, new_image_file: str = 'new_image.jpg'):
     image.putdata(data=new_image)
     image.save(new_image_file)
     print(f"changement de l'image {image_file} au fichier {new_image_file}")
-
-
-mouse = Controller()
-while True:
-    print(mouse.position)
 
 
 get_image(image_file='dogo.jpg', new_image_file='new_image.jpg')
