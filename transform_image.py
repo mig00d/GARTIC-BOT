@@ -1,6 +1,8 @@
 from PIL import Image
 from math import sqrt
-from pynput.mouse import Listener, Button, Controller
+from pynput.mouse import Listener, Controller
+
+import draw_image
 
 # COULEUR GARTIC PHONE
 RGB_WHITE = (255, 255, 255)
@@ -66,6 +68,7 @@ def calcul_better_color(pixels_image) -> list:
 def resize_image(image: str, new_size: tuple, filename: str = 'resized_image.jpg'):
     """
     Retourne une image reformater de l'image de base téléchargée
+    :param new_size:
     :param image:
     :param filename:
     :return:, filename: str = 'resized_image.jpg'
@@ -84,7 +87,7 @@ def on_click(x, y, button, pressed):
 
 def calcul_coordinates(list_cor: list) -> tuple:
     """
-    calcule la longueur et la largeur du carré selon
+    Calcule la longueur et la largeur du carré selon
     :param list_cor:
     :return:
     """
@@ -93,7 +96,11 @@ def calcul_coordinates(list_cor: list) -> tuple:
     x_zone = int(sqrt((coor1[0] - coor2[0]) ** 2))
     y_zone = int(sqrt((coor1[1] - coor2[1]) ** 2))
     tuple_coor = (x_zone, y_zone)
-    return tuple_coor
+
+    top_left_corner = (min(coor1[0], coor2[0]), min(coor1[1], coor2[1]))
+    bot_right_corner = (max(coor1[0], coor2[0]), max(coor1[1], coor2[1]))
+
+    return tuple_coor, top_left_corner, bot_right_corner
 
 
 def get_drawing_zone() -> tuple:
@@ -111,24 +118,25 @@ def get_drawing_zone() -> tuple:
 
         with Listener(on_click=on_click) as listener:
             listener.join()
-
+        print(f'Click: {mouse.position}')
         drawing_zone.append(mouse.position)
         position_getter += 1
 
-    draw_start_coordinates = drawing_zone[0]
-
-    return calcul_coordinates(drawing_zone), draw_start_coordinates
+    return calcul_coordinates(drawing_zone)
 
 
 def get_image(image_file: str, new_image_file: str = 'new_image.jpg'):
     """
-    Recréer une image de base avec les couleurs de base de Gartic phone
+    Recréer une image de base avec les couleurs de base de Gartic phone et redimensionner selon les clicks de l'utilisateur
     """
 
-    # Les coordonnées sur le quelles le dessin doit commencer
-    size, cor_start_drawing = get_drawing_zone()
+    input('aha ?')
 
-    print(f'Zone confirmée de {size} pixels')
+    size, cor_start_drawing, cor_stop_drawing = get_drawing_zone()
+
+    print(cor_start_drawing)
+    print(f'coté x du rectangle confirmé:  {size[0]}')
+    print(f'coté y du rectangle confirmé:  {size[1]}')
 
     resized_image = resize_image(image_file, new_size=size)
 
@@ -143,7 +151,10 @@ def get_image(image_file: str, new_image_file: str = 'new_image.jpg'):
     resized_image.putdata(data=new_image)
     resized_image.save(new_image_file)
     print(f"changement de l'image {image_file} au fichier {new_image_file}")
+
+    draw_image.draw(start_pixel=cor_start_drawing, stop_pixel=cor_stop_drawing, drawing_zone=size,
+                    new_image=new_image_file, color_list=ALL_COLOR_RGB)
     print("Programme terminer")
 
 
-get_image(image_file='minecraft_image.jpg')
+get_image(image_file='dogo.jpg')
