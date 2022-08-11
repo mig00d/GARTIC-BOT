@@ -1,38 +1,12 @@
 from PIL import Image
-from math import sqrt
 from pynput.mouse import Listener, Controller
+from math import sqrt
 
-import download_image
-import draw_imageV2
-
-# COULEUR GARTIC PHONE
-RGB_WHITE = (255, 255, 255)
-RGB_BLACK = (0, 0, 0)
-RGB_DARK_BLUE = (0, 80, 205)
-RGB_LIGHT_GREY = (170, 170, 170)
-RGB_LIGHT_BLUE = (38, 201, 205)
-RGB_DARK_RED = (153, 0, 0)
-RGB_BROWN = (165, 65, 18)
-RGB_LIGHT_GREEN = (17, 176, 60)
-RGB_LIGHT_RED = (255, 0, 19)
-RGB_ORANGE = (255, 120, 41)
-RGB_DARK_ORANGE = (176, 112, 28)
-RGB_PURPLE = (153, 0, 78)
-RGB_DARK_BEIGE = (203, 90, 87)
-RGB_YELLOW = (253, 193, 37)
-RGB_PINK = (255, 0, 143)
-RGB_DARK_GREEN = (11, 116, 32)
-RGB_BEIGE = (254, 175, 168)
-
-# toutes les couleurs de base dans gartic phone sont dans cette liste
-ALL_COLOR_RGB = [
-    RGB_DARK_BLUE, RGB_LIGHT_GREY, RGB_LIGHT_BLUE, RGB_DARK_RED, RGB_BROWN,
-    RGB_LIGHT_RED, RGB_ORANGE, RGB_DARK_ORANGE, RGB_PURPLE, RGB_DARK_BEIGE, RGB_YELLOW, RGB_PINK,
-    RGB_BEIGE, RGB_WHITE, RGB_BLACK
-]
+from main_app import draw_imageV2
+from init_app.constants import ALL_COLOR_RGB
 
 
-def calcul_better_color(pixels_image) -> list:
+def calcul_better_color(pixels_image: list) -> list:
     """
     À partir d'une liste de touts les codes RGB de l'image de base, va regarder de quelle couleur il est le moins le
     distant selon les codes RGB des couleurs de gartic phone. Puis retourne dans une liste les couleurs les plus proches
@@ -55,8 +29,7 @@ def calcul_better_color(pixels_image) -> list:
                 break
 
             # calculer la distance de chaque pixel par rapport aux couleurs possibles
-            current_distance = sqrt(
-                (pixel[0] - color[0]) ** 2 + (pixel[1] - color[1]) ** 2 + (pixel[2] - color[2]) ** 2)
+            current_distance = (pixel[0] - color[0]) ** 2 + (pixel[1] - color[1]) ** 2 + (pixel[2] - color[2]) ** 2
 
             # si la distance est la plus petite stocke la valeur dans minimal_distance et la couleur associée
             if current_distance < minimal_distance:
@@ -101,9 +74,7 @@ def calcul_coordinates(list_cor: list) -> tuple:
     tuple_coor = (x_zone, y_zone)
 
     top_left_corner = (min(coor1[0], coor2[0]), min(coor1[1], coor2[1]))
-    top_right_corner = (max(coor1[0], coor2[0]), min(coor1[1], coor2[1]))
-    bot_right_corner = (max(coor1[0], coor2[0]), max(coor1[1], coor2[1]))
-    return tuple_coor, top_left_corner, bot_right_corner, top_right_corner
+    return tuple_coor, top_left_corner
 
 
 def get_drawing_zone() -> tuple:
@@ -127,14 +98,13 @@ def get_drawing_zone() -> tuple:
     return calcul_coordinates(drawing_zone)
 
 
-def get_image(image_file: str, new_image_file: str = 'new_image.jpg'):
+def get_image(size: tuple, cor_start_drawing: tuple, image_file: str, new_image_file: str = 'new_image.jpg'):
     """
     Recréer une image de base avec les couleurs de base de Gartic phone et redimensionner selon les clicks de l'utilisateur
     """
 
-    size, cor_start_drawing, cor_stop_drawing, cor_newline = get_drawing_zone()
-
     print(cor_start_drawing)
+    print(size)
     print(f'coté x du rectangle confirmé:  {size[0]}')
     print(f'coté y du rectangle confirmé:  {size[1]}')
 
@@ -144,9 +114,7 @@ def get_image(image_file: str, new_image_file: str = 'new_image.jpg'):
 
     all_pixels = list(resized_image.getdata())
     print('Calcul des distances...')
-    print(len(all_pixels))
     new_image_list = calcul_better_color(all_pixels)
-    print(len(new_image_list))
     # créer la nouvelle image avec les bonnes couleurs
     resized_image.putdata(data=new_image_list)
     resized_image.save(new_image_file)
@@ -156,13 +124,3 @@ def get_image(image_file: str, new_image_file: str = 'new_image.jpg'):
                       new_image_list=new_image_list, drawing_zone=size)
 
     print("Programme terminer")
-
-
-url = 'https://i.pinimg.com/736x/3b/98/26/3b9826e0f1e000865f588acba68f7c59.jpg'
-file_name = 'origin_image'
-file_path = 'images/'
-
-print('téléchargement image')
-origin_image = download_image.download_image(url, file_name, file_path)
-
-get_image(origin_image)

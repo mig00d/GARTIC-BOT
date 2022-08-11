@@ -1,31 +1,7 @@
 from pynput.mouse import Button, Controller
 from time import sleep
 
-
-# POSITION DES COULEURS DE GARTIC PHONE
-POS_BLACK = (375, 310)
-POS_DARK_BLUE = (440, 310)
-POS_WHITE = (375, 350)
-POS_LIGHT_GREY = (400, 350)
-POS_LIGHT_BLUE = (440, 350)
-POS_DARK_RED = (400, 390)
-POS_BROWN = (440, 390)
-POS_LIGHT_GREEN = (375, 430)
-POS_LIGHT_RED = (400, 430)
-POS_ORANGE = (440, 430)
-POS_DARK_ORANGE = (375, 475)
-POS_PURPLE = (400, 475)
-POS_DARK_BEIGE = (440, 475)
-POS_YELLOW = (375, 500)
-POS_PINK = (400, 500)
-POS_DARK_GREEN = (375, 390)
-POS_BEIGE = (440, 500)
-
-ALL_POS_COLOR = [
-    POS_DARK_BLUE, POS_LIGHT_GREY, POS_LIGHT_BLUE, POS_DARK_RED, POS_BROWN,
-    POS_LIGHT_RED, POS_ORANGE, POS_DARK_ORANGE, POS_PURPLE, POS_DARK_BEIGE, POS_YELLOW, POS_PINK,
-    POS_BEIGE, POS_WHITE, POS_BLACK
-]
+from init_app.constants import ALL_POS_COLOR
 
 
 def get_coor_colors(color_list: list, drawing_zone: tuple, new_image_list: list) -> list:
@@ -44,8 +20,8 @@ def get_coor_colors(color_list: list, drawing_zone: tuple, new_image_list: list)
         current_color_new_image_list = 0
         current_color_list += 1
 
-        for y in range(drawing_zone[1]):
-            for x in range(drawing_zone[0]):
+        for y in range(0, drawing_zone[1]):
+            for x in range(0, drawing_zone[0]):
 
                 if new_image_list[current_color_new_image_list] == color and color != (255, 255, 255):
                     coor_all_color[current_color_list].append((x, y))
@@ -68,7 +44,7 @@ def draw_image(start_pixel: tuple, coor_colors: list):
         mouse.position = pos_color
 
         mouse.click(Button.left, 1)
-        sleep(.001)
+        sleep(.0000000000000001)
 
         current_color_list += 1
 
@@ -90,7 +66,7 @@ def draw_image(start_pixel: tuple, coor_colors: list):
             mouse.position = coor_mouse
             mouse.press(Button.left)
 
-            sleep(.0001)
+            sleep(.0000000000000001)
 
     mouse.release(Button.left)
 
